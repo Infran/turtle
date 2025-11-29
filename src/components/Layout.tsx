@@ -12,25 +12,23 @@ import { useGoogleSheets } from '../context/GoogleSheetsContext';
 import { Wallet, CreditCard } from 'lucide-react';
 
 export default function Layout() {
+    const { user } = useGoogleSheets();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
-    const [showSetupWizard, setShowSetupWizard] = useState(false);
+    // Initialize state based on localStorage and user presence
+    const [wizardDismissed, setWizardDismissed] = useState(false);
+    const wizardCompleted = localStorage.getItem('setupWizardCompleted');
+    const showSetupWizard = !!(user && !wizardCompleted && !wizardDismissed);
     const { pathname } = useLocation();
     const { layoutMode, mobileLayoutMode } = useLayoutConfig();
     const isDesktop = useMediaQuery('(min-width: 768px)');
     const { t } = useTranslation();
-    const { user } = useGoogleSheets();
 
-    // Show setup wizard on first login
-    useEffect(() => {
-        const wizardCompleted = localStorage.getItem('setupWizardCompleted');
-        if (user && !wizardCompleted) {
-            setShowSetupWizard(true);
-        }
-    }, [user]);
+
 
     // Close mobile menu on route change
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsMobileOpen(false);
     }, [pathname]);
 
@@ -58,7 +56,7 @@ export default function Layout() {
     ];
 
     // Map nav link names to translation keys
-    const nameToKeyMap: Record<string, string> = {
+    const nameToKeyMap: Record<string, import('../i18n/translations').TranslationKey> = {
         'Home': 'nav.home',
         'Incomes': 'nav.incomes',
         'Expenses': 'nav.expenses',
@@ -73,10 +71,10 @@ export default function Layout() {
         if (showSetupWizard) {
             return (
                 <SetupWizard
-                    onComplete={() => setShowSetupWizard(false)}
+                    onComplete={() => setWizardDismissed(true)}
                     onClose={() => {
                         localStorage.setItem('setupWizardCompleted', 'true');
-                        setShowSetupWizard(false);
+                        setWizardDismissed(true);
                     }}
                 />
             );
@@ -98,10 +96,10 @@ export default function Layout() {
         if (showSetupWizard) {
             return (
                 <SetupWizard
-                    onComplete={() => setShowSetupWizard(false)}
+                    onComplete={() => setWizardDismissed(true)}
                     onClose={() => {
                         localStorage.setItem('setupWizardCompleted', 'true');
-                        setShowSetupWizard(false);
+                        setWizardDismissed(true);
                     }}
                 />
             );
@@ -135,10 +133,10 @@ export default function Layout() {
     if (showSetupWizard) {
         return (
             <SetupWizard
-                onComplete={() => setShowSetupWizard(false)}
+                onComplete={() => setWizardDismissed(true)}
                 onClose={() => {
                     localStorage.setItem('setupWizardCompleted', 'true');
-                    setShowSetupWizard(false);
+                    setWizardDismissed(true);
                 }}
             />
         );
@@ -188,7 +186,7 @@ export default function Layout() {
                             key={link.path}
                             to={link.path}
                             icon={link.icon}
-                            label={t(nameToKeyMap[link.name] as any)}
+                            label={t(nameToKeyMap[link.name])}
                             isCollapsed={isCollapsed}
                         />
                     ))}
@@ -221,7 +219,7 @@ export default function Layout() {
                                 key={link.path}
                                 to={link.path}
                                 icon={link.icon}
-                                label={t(nameToKeyMap[link.name] as any)}
+                                label={t(nameToKeyMap[link.name])}
                                 isCollapsed={false}
                             />
                         ))}

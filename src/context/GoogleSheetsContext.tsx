@@ -39,12 +39,12 @@ const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 const getSheetTitle = (type: 'expenses' | 'incomes', region: 'US' | 'BR'): string => {
     const locale: Locale = region === 'US' ? 'en-US' : 'pt-BR';
     const key = type === 'expenses' ? 'sheet.name.expenses' : 'sheet.name.incomes';
-    return (translations[locale] as any)[key];
+    return (translations[locale] as Record<string, string>)[key];
 };
 
 const getSheetHeaders = (region: 'US' | 'BR'): string[] => {
     const locale: Locale = region === 'US' ? 'en-US' : 'pt-BR';
-    const t = translations[locale] as any;
+    const t = translations[locale] as Record<string, string>;
     return [
         t['sheet.header.id'],
         t['sheet.header.date'],
@@ -58,6 +58,7 @@ const getSheetHeaders = (region: 'US' | 'BR'): string[] => {
     ];
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useGoogleSheets = () => {
     const context = useContext(GoogleSheetsContext);
     if (!context) {
@@ -106,7 +107,7 @@ export const GoogleSheetsProvider = ({ children }: { children: ReactNode }) => {
                 setIsInitialized(true);
                 const token = localStorage.getItem('google_token');
                 if (token) {
-                    setUser({ token } as any);
+                    setUser({ token });
                     gapi.client.setToken({ access_token: token });
                     fetchUserProfile(token);
                 }
@@ -130,7 +131,7 @@ export const GoogleSheetsProvider = ({ children }: { children: ReactNode }) => {
     const login = useGoogleLogin({
         onSuccess: (codeResponse) => {
             const token = codeResponse.access_token;
-            setUser({ token } as any);
+            setUser({ token });
             localStorage.setItem('google_token', token);
             gapi.client.setToken({ access_token: token });
             fetchUserProfile(token);
@@ -157,6 +158,7 @@ export const GoogleSheetsProvider = ({ children }: { children: ReactNode }) => {
             const response = await gapi.client.sheets.spreadsheets.get({ spreadsheetId: spreadsheetIdParam });
             const sheets = response.result.sheets;
             if (!sheets || sheets.length === 0) throw new Error('No sheets found');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const found = sheets.find((s: any) => s.properties.title === targetTitle);
             if (found) return targetTitle;
             return sheets[0].properties?.title || 'Sheet1';
@@ -171,10 +173,12 @@ export const GoogleSheetsProvider = ({ children }: { children: ReactNode }) => {
         try {
             const response = await gapi.client.sheets.spreadsheets.get({ spreadsheetId: spreadsheetIdParam });
             const sheets = response.result.sheets;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if (sheets?.some((s: any) => s.properties.title === newTitle)) {
                 console.log(`Sheet with title ${newTitle} already exists.`);
                 return;
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const sheet = sheets?.find((s: any) => s.properties.title === currentTitle);
             if (!sheet || typeof sheet.properties?.sheetId === 'undefined') {
                 console.error('Could not find sheet to rename');
@@ -219,6 +223,7 @@ export const GoogleSheetsProvider = ({ children }: { children: ReactNode }) => {
                 });
                 // Apply formatting to header row
                 const sheetInfo = await gapi.client.sheets.spreadsheets.get({ spreadsheetId: spreadsheetIdParam });
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const sheet = sheetInfo.result.sheets?.find((s: any) => s.properties.title === sheetTitle);
                 if (sheet?.properties?.sheetId !== undefined) {
                     await gapi.client.sheets.spreadsheets.batchUpdate({
@@ -340,18 +345,20 @@ export const GoogleSheetsProvider = ({ children }: { children: ReactNode }) => {
                 range: `${sheetTitle}!A2:I`,
             });
             const rows = response.result.values || [];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const parsed: Expense[] = rows.map((row: any[]) => ({
                 id: row[0],
                 date: row[1],
                 description: row[2],
                 amount: parseFloat(row[3]),
-                type: row[4] as any,
+                type: (row[4] === 'income' ? 'Income' : 'Expense') as import('../types/Expense').ExpenseType,
                 category: row[5],
-                method: (row[6] || 'Cash') as any,
+                method: (row[6] || 'Cash') as import('../types/Expense').PaymentMethod,
                 creditCardId: row[7] || '',
                 bankAccountId: row[8] || '',
             }));
             setExpenses(parsed);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.error('Error fetching expenses:', error);
             if (error.result?.error?.code === 401 || error.result?.error?.code === 403) {
@@ -376,18 +383,20 @@ export const GoogleSheetsProvider = ({ children }: { children: ReactNode }) => {
                 range: `${sheetTitle}!A2:I`,
             });
             const rows = response.result.values || [];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const parsed: Expense[] = rows.map((row: any[]) => ({
                 id: row[0],
                 date: row[1],
                 description: row[2],
                 amount: parseFloat(row[3]),
-                type: row[4] as any,
+                type: (row[4] === 'income' ? 'Income' : 'Expense') as import('../types/Expense').ExpenseType,
                 category: row[5],
-                method: (row[6] || 'Cash') as any,
+                method: (row[6] || 'Cash') as import('../types/Expense').PaymentMethod,
                 creditCardId: row[7] || '',
                 bankAccountId: row[8] || '',
             }));
             setIncome(parsed);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.error('Error fetching income:', error);
             if (error.result?.error?.code === 401 || error.result?.error?.code === 403) {
@@ -464,9 +473,11 @@ export const GoogleSheetsProvider = ({ children }: { children: ReactNode }) => {
             });
             const rows = response.result.values;
             if (!rows) throw new Error('No data found');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const rowIndex = rows.findIndex((row: any[]) => row[0] === id);
             if (rowIndex === -1) throw new Error('Item not found');
             const sheetInfo = await gapi.client.sheets.spreadsheets.get({ spreadsheetId: spreadsheetIdParam });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const sheet = sheetInfo.result.sheets?.find((s: any) => s.properties.title === sheetTitle);
             if (!sheet || typeof sheet.properties?.sheetId === 'undefined') throw new Error('Sheet not found');
             await gapi.client.sheets.spreadsheets.batchUpdate({
@@ -544,4 +555,5 @@ export const GoogleSheetsProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useGoogleSheetsContext = useGoogleSheets; // Alias for backward compatibility if needed

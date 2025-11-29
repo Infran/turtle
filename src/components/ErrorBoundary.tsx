@@ -20,7 +20,7 @@ const getCurrentLanguage = (): 'pt-BR' | 'en-US' => {
 // Helper to translate
 const t = (key: string): string => {
     const lang = getCurrentLanguage();
-    return (translations[lang] as any)[key] || key;
+    return (translations[lang] as Record<string, string>)[key] || key;
 };
 
 // Class-based Error Boundary for catching errors in component tree

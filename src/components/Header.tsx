@@ -11,7 +11,7 @@ export default function Header({ navLinks }: HeaderProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { t } = useTranslation();
 
-    const nameToKeyMap: Record<string, string> = {
+    const nameToKeyMap: Record<string, import('../i18n/translations').TranslationKey> = {
         'Home': 'nav.home',
         'Expenses': 'nav.expenses',
         'About': 'nav.about'
@@ -50,7 +50,7 @@ export default function Header({ navLinks }: HeaderProps) {
                             }
                         >
                             {link.icon}
-                            <span>{t(nameToKeyMap[link.name] as any)}</span>
+                            <span>{t(nameToKeyMap[link.name])}</span>
                         </NavLink>
                     ))}
                 </nav>
@@ -80,7 +80,7 @@ export default function Header({ navLinks }: HeaderProps) {
                                 }
                             >
                                 {link.icon}
-                                <span>{t(nameToKeyMap[link.name] as any)}</span>
+                                <span>{t(nameToKeyMap[link.name])}</span>
                             </NavLink>
                         ))}
                     </nav>

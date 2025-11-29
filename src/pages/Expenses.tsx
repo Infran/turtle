@@ -41,7 +41,7 @@ export default function Expenses() {
         if (spreadsheetId && isInitialized) {
             fetchExpenses();
         }
-    }, [spreadsheetId, isInitialized]);
+    }, [spreadsheetId, isInitialized, fetchExpenses]);
 
     if (!spreadsheetId) {
         return <ConnectSheet />;
@@ -140,7 +140,7 @@ export default function Expenses() {
 
             {error && (
                 <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg border border-red-200 dark:border-red-800">
-                    {t(error as any)}
+                    {t(error as import('../i18n/translations').TranslationKey)}
                 </div>
             )}
 
@@ -245,7 +245,7 @@ export default function Expenses() {
                                 id="method"
                                 value={newExpense.method}
                                 onChange={(e) => {
-                                    const method = e.target.value as any;
+                                    const method = e.target.value as import('../types/Expense').PaymentMethod;
                                     setNewExpense({
                                         ...newExpense,
                                         method,
@@ -361,7 +361,7 @@ export default function Expenses() {
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
                                             <span className="px-2 py-1 rounded-full text-xs bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300">
-                                                {t(`method.${expense.method.toLowerCase()}` as any)}
+                                                {t(`method.${expense.method.toLowerCase()}` as import('../i18n/translations').TranslationKey)}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">

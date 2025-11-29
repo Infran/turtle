@@ -93,7 +93,7 @@ export default function SetupWizard({ onComplete, onClose }: SetupWizardProps) {
                                 </span>
                             </div>
                             <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
-                                {currentStep === 0 ? t('wizard.welcome.title') : t(steps[currentStep].labelKey as any)}
+                                {currentStep === 0 ? t('wizard.welcome.title') : t(steps[currentStep].labelKey as import('../i18n/translations').TranslationKey)}
                             </h2>
                         </div>
                         <button

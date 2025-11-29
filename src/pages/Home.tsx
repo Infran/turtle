@@ -10,63 +10,17 @@ export default function Home() {
     const { region, currency } = useRegion();
     const { t } = useTranslation();
 
-    // Swipe to refresh state
-    const [touchStart, setTouchStart] = useState<number | null>(null);
-    const [pullDistance, setPullDistance] = useState(0);
-    const [isRefreshing, setIsRefreshing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const PULL_THRESHOLD = 120; // Distance required to trigger refresh
-    const REFRESH_HEIGHT = 60; // Height to snap to when refreshing
-    const DAMPING = 0.4; // Resistance factor
 
-    const onTouchStart = (e: React.TouchEvent) => {
-        // Only enable pull-to-refresh when at the top of the page and not already refreshing
-        if (window.scrollY === 0 && !isRefreshing) {
-            setTouchStart(e.targetTouches[0].clientY);
-        }
-    };
-
-    const onTouchMove = (e: React.TouchEvent) => {
-        if (touchStart === null || isRefreshing) return;
-
-        const currentY = e.targetTouches[0].clientY;
-        const diff = currentY - touchStart;
-
-        if (diff > 0 && window.scrollY === 0) {
-            setPullDistance(diff * DAMPING);
-        }
-    };
-
-    const onTouchEnd = async () => {
-        if (touchStart === null || isRefreshing) return;
-
-        if (pullDistance > PULL_THRESHOLD) {
-            // Trigger refresh
-            setIsRefreshing(true);
-            setPullDistance(REFRESH_HEIGHT);
-            try {
-                await Promise.all([fetchExpenses(), fetchIncome()]);
-            } catch (err) {
-                setError('Failed to refresh data');
-            } finally {
-                setIsRefreshing(false);
-                setPullDistance(0);
-            }
-        } else {
-            // Snap back
-            setPullDistance(0);
-        }
-        setTouchStart(null);
-    };
 
     const handleRefresh = async () => {
         setLoading(true);
         setError(null);
         try {
             await Promise.all([fetchExpenses(), fetchIncome()]);
-        } catch (err) {
+        } catch {
             setError('Failed to refresh data');
         } finally {
             setLoading(false);
@@ -105,28 +59,11 @@ export default function Home() {
     return (
         <div className="relative min-h-screen">
             {/* Refresh Spinner Indicator - Behind Content */}
-            <div
-                className="absolute top-0 left-0 w-full flex justify-center items-center z-0"
-                style={{
-                    height: `${REFRESH_HEIGHT}px`,
-                    opacity: Math.min(pullDistance / (PULL_THRESHOLD * 0.5), 1)
-                }}
-            >
-                <div className={`w-8 h-8 border-4 border-gray-200 dark:border-gray-800 border-t-primary-600 dark:border-t-primary-500 rounded-full ${isRefreshing ? 'animate-spin' : ''}`}
-                    style={{ transform: `rotate(${pullDistance * 2}deg)` }}
-                />
-            </div>
+
 
             {/* Main Content - Draggable */}
             <div
                 className="space-y-8 bg-gray-50 dark:bg-gray-900 relative z-10 min-h-screen"
-                onTouchStart={onTouchStart}
-                onTouchMove={onTouchMove}
-                onTouchEnd={onTouchEnd}
-                style={{
-                    transform: `translateY(${pullDistance}px)`,
-                    transition: touchStart !== null ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)'
-                }}
             >
                 <div className="flex justify-between items-center pt-1">
                     <div>

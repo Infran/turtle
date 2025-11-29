@@ -34,8 +34,8 @@ export default function Settings() {
     const { mobileLayoutMode, setMobileLayoutMode, mobileStyle, setMobileStyle } = useLayoutConfig();
 
     const [activeSection, setActiveSection] = useState<Section>('spreadsheets');
-    const [inputSheetId, setInputSheetId] = useState('');
-    const [inputIncomeSheetId, setInputIncomeSheetId] = useState('');
+    const [inputSheetId, setInputSheetId] = useState(spreadsheetId || '');
+    const [inputIncomeSheetId, setInputIncomeSheetId] = useState(incomeSheetId || '');
     const [isSaved, setIsSaved] = useState(false);
     const [newIncomeCategory, setNewIncomeCategory] = useState('');
     const [newExpenseCategory, setNewExpenseCategory] = useState('');
@@ -51,9 +51,12 @@ export default function Settings() {
         initialBalance: 0
     });
 
+    // Update inputs if context values change (e.g. after a disconnect or external update)
+    // Update inputs if context values change
     useEffect(() => {
-        if (spreadsheetId) setInputSheetId(spreadsheetId);
-        if (incomeSheetId) setInputIncomeSheetId(incomeSheetId);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setInputSheetId(spreadsheetId || '');
+        setInputIncomeSheetId(incomeSheetId || '');
     }, [spreadsheetId, incomeSheetId]);
 
     const handleSaveExpenseSheet = () => {
@@ -145,8 +148,7 @@ export default function Settings() {
             <span className={`shrink-0 transition-colors ${activeSection === id ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500'}`}>
                 <Icon size={20} />
             </span>
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            <span className="ml-3 whitespace-nowrap">{t(labelKey as any)}</span>
+            <span className="ml-3 whitespace-nowrap">{t(labelKey as import('../i18n/translations').TranslationKey)}</span>
             {activeSection === id && (
                 <ChevronRight className="ml-auto w-4 h-4 text-primary-500 dark:text-primary-400" />
             )}
@@ -229,7 +231,7 @@ export default function Settings() {
                                         `}
                                     >
                                         <Icon className="w-4 h-4 mr-2" />
-                                        <span>{t(labelKey as any)}</span>
+                                        <span>{t(labelKey as import('../i18n/translations').TranslationKey)}</span>
                                     </button>
                                 ))}
                             </nav>
@@ -628,7 +630,7 @@ export default function Settings() {
                                             <select
                                                 id="currency"
                                                 value={currency}
-                                                onChange={(e) => setCurrency(e.target.value as any)}
+                                                onChange={(e) => setCurrency(e.target.value as import('../context/RegionContext').Currency)}
                                                 className="w-full h-11 p-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-primary-900 dark:text-primary-50 focus:ring-2 focus:ring-primary-500 outline-none"
                                             >
                                                 <option value="BRL">Real (BRL)</option>
@@ -731,8 +733,7 @@ export default function Settings() {
                                     }`}
                             >
                                 <Icon size={20} />
-                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                <span className="text-[10px] mt-1 font-medium">{t(labelKey as any)}</span>
+                                <span className="text-[10px] mt-1 font-medium">{t(labelKey as import('../i18n/translations').TranslationKey)}</span>
                             </button>
                         ))}
                     </div>
@@ -780,8 +781,7 @@ export default function Settings() {
                                         <div className={`p-3 rounded-xl mb-2 ${activeSection === id ? 'bg-primary-100 dark:bg-primary-900/40' : 'bg-gray-100 dark:bg-gray-800'}`}>
                                             <Icon size={24} />
                                         </div>
-                                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                        <span className="text-xs font-medium text-center">{t(labelKey as any)}</span>
+                                        <span className="text-xs font-medium text-center">{t(labelKey as import('../i18n/translations').TranslationKey)}</span>
                                     </button>
                                 ))}
                             </div>

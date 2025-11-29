@@ -28,7 +28,7 @@ export default function Incomes() {
         if (incomeSheetId && isInitialized) {
             fetchIncome();
         }
-    }, [incomeSheetId, isInitialized]);
+    }, [incomeSheetId, isInitialized, fetchIncome]);
 
     // If no spreadsheet is connected, show the connect prompt
     if (!incomeSheetId) {
@@ -128,7 +128,7 @@ export default function Incomes() {
 
             {error && (
                 <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg border border-red-200 dark:border-red-800">
-                    {t(error as any)}
+                    {t(error as import('../i18n/translations').TranslationKey)}
                 </div>
             )}
 

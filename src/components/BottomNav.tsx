@@ -15,7 +15,7 @@ export default function BottomNav({ navLinks }: BottomNavProps) {
     const { t } = useTranslation();
 
     // Map nav link names to translation keys
-    const nameToKeyMap: Record<string, string> = {
+    const nameToKeyMap: Record<string, import('../i18n/translations').TranslationKey> = {
         'Home': 'nav.home',
         'Incomes': 'nav.incomes',
         'Expenses': 'nav.expenses',
@@ -36,7 +36,7 @@ export default function BottomNav({ navLinks }: BottomNavProps) {
                     }
                 >
                     <div className="w-6 h-6">{link.icon}</div>
-                    <span className="text-[10px] font-medium">{t(nameToKeyMap[link.name] as any)}</span>
+                    <span className="text-[10px] font-medium">{t(nameToKeyMap[link.name])}</span>
                 </NavLink>
             ))}
         </div>

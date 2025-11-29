@@ -86,6 +86,7 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useLayoutConfig = () => {
     const context = useContext(LayoutContext);
     if (context === undefined) {

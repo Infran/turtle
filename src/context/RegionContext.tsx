@@ -34,7 +34,7 @@ const RegionContext = createContext<RegionContextType | undefined>(undefined);
 // Helper to get translated default categories
 const getDefaultIncomeCategories = (region: Region): string[] => {
     const locale: Locale = region === 'US' ? 'en-US' : 'pt-BR';
-    const t = translations[locale] as any;
+    const t = translations[locale] as Record<string, string>;
     return [
         t['category.income.salary'],
         t['category.income.freelance'],
@@ -46,7 +46,7 @@ const getDefaultIncomeCategories = (region: Region): string[] => {
 
 const getDefaultExpenseCategories = (region: Region): string[] => {
     const locale: Locale = region === 'US' ? 'en-US' : 'pt-BR';
-    const t = translations[locale] as any;
+    const t = translations[locale] as Record<string, string>;
     return [
         t['category.expense.food'],
         t['category.expense.transport'],
@@ -135,8 +135,8 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem('creditCards', JSON.stringify(creditCards));
     }, [creditCards]);
 
-    // Update default categories when region/language changes
-    useEffect(() => {
+    // Helper to update categories when region changes
+    const updateCategoriesForRegion = (newRegion: Region) => {
         // Get all possible default categories (both languages)
         const defaultsEN = {
             expense: getDefaultExpenseCategories('US'),
@@ -159,7 +159,7 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
 
         // Update to current language's defaults if they haven't been customized
         if (expenseIsDefault && expenseCategories.length === 6) {
-            const newDefaults = getDefaultExpenseCategories(region);
+            const newDefaults = getDefaultExpenseCategories(newRegion);
             // Only update if actually different (avoid infinite loop)
             if (JSON.stringify(expenseCategories) !== JSON.stringify(newDefaults)) {
                 setExpenseCategories(newDefaults);
@@ -167,21 +167,24 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
         }
 
         if (incomeIsDefault && incomeCategories.length === 5) {
-            const newDefaults = getDefaultIncomeCategories(region);
+            const newDefaults = getDefaultIncomeCategories(newRegion);
             // Only update if actually different (avoid infinite loop)
             if (JSON.stringify(incomeCategories) !== JSON.stringify(newDefaults)) {
                 setIncomeCategories(newDefaults);
             }
         }
-    }, [region]); // Only run when region changes
+    };
 
 
     const setRegion = (newRegion: Region) => {
         setRegionState(newRegion);
+        updateCategoriesForRegion(newRegion);
     };
 
     const toggleRegion = () => {
-        setRegionState(prev => prev === 'US' ? 'BR' : 'US');
+        const newRegion = region === 'US' ? 'BR' : 'US';
+        setRegionState(newRegion);
+        updateCategoriesForRegion(newRegion);
     };
 
     const setCurrency = (newCurrency: Currency) => {
@@ -271,6 +274,7 @@ export const RegionProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useRegion = () => {
     const context = useContext(RegionContext);
     if (context === undefined) {

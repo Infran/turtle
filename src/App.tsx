@@ -16,7 +16,7 @@ const Settings = lazy(() => import('./pages/Settings'));
 const getLoadingText = (): string => {
   const savedRegion = localStorage.getItem('region');
   const lang = savedRegion === 'US' ? 'en-US' : 'pt-BR';
-  return (translations[lang] as any)['general.loading'] || 'Loading...';
+  return (translations[lang] as Record<string, string>)['general.loading'] || 'Loading...';
 };
 
 const router = createBrowserRouter([
