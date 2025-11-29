@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+@source "../src";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+
+@theme {
+    /* Fonts */
+    --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono: "JetBrainsMono Nerd Font", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+    /* Primary Palette - Lime Green based on #BDCF47 */
+    --color-primary-50: #f9fce9;
+    --color-primary-100: #f3f8d3;
+    --color-primary-200: #e8f1a7;
+    --color-primary-300: #dce97b;
+    --color-primary-400: #d1e24f;
+    --color-primary-500: #bdcf47;
+    --color-primary-600: #a3b63c;
+    --color-primary-700: #7d8d2e;
+    --color-primary-800: #586421;
+    --color-primary-900: #323b13;
+    --color-primary-950: #1a1f0a;
+
+    /* Secondary Palette - Olive based on #6E823A */
+    --color-secondary-50: #f4f6ed;
+    --color-secondary-100: #e9eedb;
+    --color-secondary-200: #d3dcb7;
+    --color-secondary-300: #bdcb93;
+    --color-secondary-400: #a7b96f;
+    --color-secondary-500: #8fa157;
+    --color-secondary-600: #6e823a;
+    --color-secondary-700: #56652e;
+    --color-secondary-800: #3e4921;
+    --color-secondary-900: #262c15;
+    --color-secondary-950: #13160a;
+
+    /* Tertiary Palette - Dark Olive based on #484E23 */
+    --color-tertiary-50: #f1f2ec;
+    --color-tertiary-100: #e3e5d9;
+    --color-tertiary-200: #c7cab3;
+    --color-tertiary-300: #abb08d;
+    --color-tertiary-400: #8f9567;
+    --color-tertiary-500: #737b41;
+    --color-tertiary-600: #5c6234;
+    --color-tertiary-700: #484e23;
+    --color-tertiary-800: #34391a;
+    --color-tertiary-900: #202511;
+    --color-tertiary-950: #101208;
+
+    --color-gray-950: #030712;
+
+    --drop-shadow-glow: 0 0 2em #69ff64aa;
+}
+
+/* Custom base styles for dark mode transition */
+:root {
+    color-scheme: light dark;
+}
+
+html.dark {
+    color-scheme: dark;
+}
+
+body {
+    overscroll-behavior-y: none;
+    @apply transition-colors duration-300 bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+}
+
+/* Custom Utilities from styles.css */
+@utility tt-logo {
+    @apply h-24 p-6 will-change-[filter] transition-[filter] duration-300 hover:drop-shadow-glow;
+}
+
+@utility tt-card {
+    @apply p-8;
+}
+
+@utility tt-read-the-docs {
+    @apply text-gray-500;
+}
