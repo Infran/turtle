@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-nginx.conf.private.private
+nginx.conf.private
 
 # Editor directories and files
 .vscode/*
