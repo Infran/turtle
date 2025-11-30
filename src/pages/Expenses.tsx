@@ -6,7 +6,7 @@ import { CurrencyInput, ConnectSheet } from '@/components';
 import {
     getBanksByRegion,
     getBankById
-} from '@/data/banks';
+} from '@/data';
 import { Pencil, Trash2 } from 'lucide-react';
 import type { Expense } from '@/types';
 import type { TranslationKey } from '@/i18n/translations';

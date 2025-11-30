@@ -3,7 +3,7 @@ import { useGoogleSheets, useRegion } from '@/context';
 import { useTranslation } from '@/hooks';
 import { X, Check, Sparkles } from 'lucide-react';
 import { CurrencyInput } from '@/components';
-import { getBanksByRegion, getBankById } from '@/data/banks';
+import { getBanksByRegion, getBankById } from '@/data';
 
 interface SetupWizardProps {
     onComplete: () => void;

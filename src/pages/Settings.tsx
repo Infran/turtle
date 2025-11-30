@@ -3,7 +3,7 @@ import { useGoogleSheets, useRegion, useLayoutConfig } from '@/context';
 import { useTranslation } from '@/hooks';
 import { Trash2, Landmark, FileSpreadsheet, Settings as SettingsIcon, Globe, Menu, Plus, X, CheckCircle, AlertCircle, ChevronRight, Save, Smartphone, Palette } from 'lucide-react';
 import { CurrencyInput, BankDetailsModal } from '@/components';
-import { getBanksByRegion, getBankById } from '@/data/banks';
+import { getBanksByRegion, getBankById } from '@/data';
 import type { BankAccount } from '@/types';
 import type { TranslationKey } from '@/i18n/translations';
 
