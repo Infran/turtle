@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
-import { useTranslation } from '../hooks/useTranslation';
+import { useTranslation } from '@/hooks';
+import type { TranslationKey } from '@/i18n/translations';
 
 interface NavLinkItem {
     name: string;
@@ -15,7 +16,7 @@ export default function BottomNav({ navLinks }: BottomNavProps) {
     const { t } = useTranslation();
 
     // Map nav link names to translation keys
-    const nameToKeyMap: Record<string, import('../i18n/translations').TranslationKey> = {
+    const nameToKeyMap: Record<string, TranslationKey> = {
         'Home': 'nav.home',
         'Incomes': 'nav.incomes',
         'Expenses': 'nav.expenses',

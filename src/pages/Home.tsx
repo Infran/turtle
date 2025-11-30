@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useGoogleSheets } from '../context/GoogleSheetsContext';
-import { useRegion } from '../context/RegionContext';
-import { formatCurrency } from '../utils/formatters';
-import { useTranslation } from '../hooks/useTranslation';
-import ConnectSheet from '../components/ConnectSheet';
+import { useGoogleSheets, useRegion } from '@/context';
+import { formatCurrency } from '@/utils/formatters';
+import { useTranslation } from '@/hooks';
+import { ConnectSheet } from '@/components';
 
 export default function Home() {
     const { user, signIn, expenses, income, spreadsheetId, fetchExpenses, fetchIncome } = useGoogleSheets();

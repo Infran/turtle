@@ -1,16 +1,14 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import Layout from './components/Layout';
-import { RouteErrorElement } from './components/ErrorBoundary';
-import ProtectedRoute from './components/ProtectedRoute';
-import { translations } from './i18n/translations';
-import './App.css';
+import { Layout, ProtectedRoute, RouteErrorElement } from '@/components';
+import { translations } from '@/i18n/translations';
+import '@/App.css';
 
-const Home = lazy(() => import('./pages/Home'));
-const About = lazy(() => import('./pages/About'));
-const Incomes = lazy(() => import('./pages/Incomes'));
-const Expenses = lazy(() => import('./pages/Expenses'));
-const Settings = lazy(() => import('./pages/Settings'));
+const Home = lazy(() => import('@/pages/Home'));
+const About = lazy(() => import('@/pages/About'));
+const Incomes = lazy(() => import('@/pages/Incomes'));
+const Expenses = lazy(() => import('@/pages/Expenses'));
+const Settings = lazy(() => import('@/pages/Settings'));
 
 // Helper to get loading text
 const getLoadingText = (): string => {

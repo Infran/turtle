@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useGoogleSheets } from '../context/GoogleSheetsContext';
-import { useRegion } from '../context/RegionContext';
-import { useTranslation } from '../hooks/useTranslation';
+import { useGoogleSheets, useRegion } from '@/context';
+import { useTranslation } from '@/hooks';
 import { X, Check, Sparkles } from 'lucide-react';
-import CurrencyInput from './CurrencyInput';
-import { getBanksByRegion, getBankById } from '../data/banks';
+import { CurrencyInput } from '@/components';
+import { getBanksByRegion, getBankById } from '@/data/banks';
 
 interface SetupWizardProps {
     onComplete: () => void;

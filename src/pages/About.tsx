@@ -1,4 +1,4 @@
-import { useTranslation } from '../hooks/useTranslation';
+import { useTranslation } from '@/hooks';
 
 export default function About() {
     const { t } = useTranslation();

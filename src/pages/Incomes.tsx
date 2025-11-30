@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useGoogleSheets } from '../context/GoogleSheetsContext';
-import { useTranslation } from '../hooks/useTranslation';
-import { useRegion } from '../context/RegionContext';
-import { formatCurrency } from '../utils/formatters';
-import CurrencyInput from '../components/CurrencyInput';
+import { useGoogleSheets, useRegion } from '@/context';
+import { useTranslation } from '@/hooks';
+import { formatCurrency } from '@/utils';
+import { CurrencyInput } from '@/components';
 import { Pencil, Trash2 } from 'lucide-react';
-import type { Expense } from '../types/Expense';
+import type { Expense } from '@/types';
+import type { TranslationKey } from '@/i18n/translations';
 
 export default function Incomes() {
     const { income, addIncome, incomeSheetId, fetchIncome, isInitialized, deleteIncome } = useGoogleSheets();
@@ -128,7 +128,7 @@ export default function Incomes() {
 
             {error && (
                 <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg border border-red-200 dark:border-red-800">
-                    {t(error as import('../i18n/translations').TranslationKey)}
+                    {t(error as TranslationKey)}
                 </div>
             )}
 

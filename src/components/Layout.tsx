@@ -1,14 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import SidebarItem from './SidebarItem';
-import Header from './Header';
-import BottomNav from './BottomNav';
-import UserConfig from './UserConfig';
-import SetupWizard from './SetupWizard';
-import { useLayoutConfig } from '../context/LayoutContext';
-import { useMediaQuery } from '../hooks/useMediaQuery';
-import { useTranslation } from '../hooks/useTranslation';
-import { useGoogleSheets } from '../context/GoogleSheetsContext';
+import { SidebarItem, Header, BottomNav, UserConfig, SetupWizard } from '@/components';
+import { useLayoutConfig, useGoogleSheets } from '@/context';
+import { useMediaQuery, useTranslation } from '@/hooks';
 import { Wallet, CreditCard } from 'lucide-react';
 
 export default function Layout() {

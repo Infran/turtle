@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useGoogleSheets } from '../context/GoogleSheetsContext';
-import { useTranslation } from '../hooks/useTranslation';
-import { useRegion } from '../context/RegionContext';
-import { useLayoutConfig } from '../context/LayoutContext';
+import { useGoogleSheets, useRegion, useLayoutConfig } from '@/context';
+import { useTranslation } from '@/hooks';
 import { Trash2, Landmark, FileSpreadsheet, Settings as SettingsIcon, Globe, Menu, Plus, X, CheckCircle, AlertCircle, ChevronRight, Save, Smartphone, Palette } from 'lucide-react';
-import CurrencyInput from '../components/CurrencyInput';
-import { getBanksByRegion, getBankById } from '../data/banks';
-import BankDetailsModal from '../components/BankDetailsModal';
-import type { BankAccount } from '../types/BankAccount';
+import { CurrencyInput, BankDetailsModal } from '@/components';
+import { getBanksByRegion, getBankById } from '@/data/banks';
+import type { BankAccount } from '@/types';
+import type { TranslationKey } from '@/i18n/translations';
 
 type Section = 'spreadsheets' | 'accounts' | 'categories' | 'preferences';
 
@@ -148,7 +146,7 @@ export default function Settings() {
             <span className={`shrink-0 transition-colors ${activeSection === id ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500'}`}>
                 <Icon size={20} />
             </span>
-            <span className="ml-3 whitespace-nowrap">{t(labelKey as import('../i18n/translations').TranslationKey)}</span>
+            <span className="ml-3 whitespace-nowrap">{t(labelKey as TranslationKey)}</span>
             {activeSection === id && (
                 <ChevronRight className="ml-auto w-4 h-4 text-primary-500 dark:text-primary-400" />
             )}

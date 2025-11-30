@@ -1,7 +1,8 @@
 import { useState, type JSX } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useTranslation } from '../hooks/useTranslation';
-import UserConfig from './UserConfig';
+import { useTranslation } from '@/hooks';
+import { UserConfig } from '@/components';
+import type { TranslationKey } from '@/i18n/translations';
 
 interface HeaderProps {
     navLinks: Array<{ name: string; path: string; icon: JSX.Element }>;
@@ -11,7 +12,7 @@ export default function Header({ navLinks }: HeaderProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { t } = useTranslation();
 
-    const nameToKeyMap: Record<string, import('../i18n/translations').TranslationKey> = {
+    const nameToKeyMap: Record<string, TranslationKey> = {
         'Home': 'nav.home',
         'Expenses': 'nav.expenses',
         'About': 'nav.about'

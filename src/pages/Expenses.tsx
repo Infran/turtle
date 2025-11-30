@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useGoogleSheets } from '../context/GoogleSheetsContext';
-import { useTranslation } from '../hooks/useTranslation';
-import { useRegion } from '../context/RegionContext';
-import { formatCurrency } from '../utils/formatters';
-import CurrencyInput from '../components/CurrencyInput';
-import ConnectSheet from '../components/ConnectSheet';
+import { useGoogleSheets, useRegion } from '@/context';
+import { useTranslation } from '@/hooks';
+import { formatCurrency } from '@/utils';
+import { CurrencyInput, ConnectSheet } from '@/components';
 import {
     getBanksByRegion,
     getBankById
-} from '../data/banks';
+} from '@/data/banks';
 import { Pencil, Trash2 } from 'lucide-react';
-import type { Expense } from '../types/Expense';
+import type { Expense } from '@/types';
+import type { TranslationKey } from '@/i18n/translations';
 
 export default function Expenses() {
     const { expenses, addExpense, spreadsheetId, fetchExpenses, isInitialized, deleteExpense } = useGoogleSheets();
@@ -361,7 +360,7 @@ export default function Expenses() {
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
                                             <span className="px-2 py-1 rounded-full text-xs bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300">
-                                                {t(`method.${expense.method.toLowerCase()}` as import('../i18n/translations').TranslationKey)}
+                                                {t(`method.${expense.method.toLowerCase()}` as TranslationKey)}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">

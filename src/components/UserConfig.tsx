@@ -1,10 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGoogleSheets } from '../context/GoogleSheetsContext';
-import { useLayoutConfig } from '../context/LayoutContext';
-import { useTheme } from '../hooks/useTheme';
-import { useTranslation } from '../hooks/useTranslation';
-import { useMediaQuery } from '../hooks/useMediaQuery';
+import { useGoogleSheets, useLayoutConfig } from '@/context';
+import { useTheme, useTranslation, useMediaQuery } from '@/hooks';
 
 interface UserConfigProps {
     compact?: boolean;
