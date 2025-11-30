@@ -18,4 +18,4 @@ Tell them where to go, how often they can expect to get an update on a
 reported vulnerability, what to expect if the vulnerability is accepted or
 declined, etc.
 
-If you find a security vulnerability, please do NOT open an issue. Email [INSERT EMAIL HERE] instead.
+If you find a security vulnerability, please do NOT open an issue. Email vinifloresinfran@gmail.com instead.

@@ -1,68 +1,90 @@
-# Configuration Guide
+# SaaS Deployment Guide
 
-This guide covers the necessary configuration to run the application with a custom domain (`turtle.infran.dev.br`) and enable Google Login.
+This guide details the steps to deploy the Turtle application on a new server. As a SaaS application intended for owner-deployment, these steps ensure replicability across multiple instances.
 
-## 1. Cloudflare Configuration
+## 1. Server Prerequisites
 
-To make your local computer accessible via `turtle.infran.dev.br`:
+Ensure the target server has the following installed:
+-   **Git**: To clone the repository.
+-   **Docker**: To build and run the application container.
+-   **PowerShell** (Optional): If using the `publish.ps1` script on Windows. On Linux, standard Docker commands will be used.
 
-1.  **DNS Management**:
-    *   Go to your Cloudflare Dashboard > DNS.
-    *   Add a **A Record**:
-        *   **Name**: `turtle`
-        *   **IPv4 Address**: Your Public IP (search "what is my ip" on Google).
-        *   **Proxy Status**: **Proxied** (Orange Cloud).
-    *   *Alternatively*, if you have a dynamic IP, you might need a DDNS updater or manually update this when your IP changes.
+## 2. Installation
 
-2.  **SSL/TLS**:
-    *   Go to SSL/TLS > Overview.
-    *   Set encryption mode to **Flexible**.
-        *   *Reason*: Your local Nginx is listening on port 80 (HTTP). Cloudflare will handle HTTPS to the user, but talk to your server via HTTP.
-    *   **Important**: If you later configure SSL locally, switch this to **Full**.
+1.  **Clone the Repository**:
+    ```bash
+    git clone https://github.com/your-username/turtle.git
+    cd turtle
+    ```
 
-## 2. Router Configuration (Port Forwarding)
+2.  **Environment Setup**:
+    Create a `.env` file in the root directory. You can copy a template if available, or create one with the following required variables:
+    ```env
+    VITE_GOOGLE_CLIENT_ID=your_google_client_id
+    VITE_GOOGLE_API_KEY=your_google_api_key
+    ```
 
-Your router needs to know where to send traffic that comes to your Public IP.
+## 3. Network & Domain Configuration
 
-1.  Access your router's admin page (usually `192.168.0.1` or `192.168.1.1`).
-2.  Find **Port Forwarding** or **Virtual Server**.
-3.  Add a new rule:
-    *   **External Port**: 80
-    *   **Internal Port**: 80
-    *   **Internal IP**: Your computer's local IP (e.g., `192.168.x.x`).
-    *   **Protocol**: TCP.
+### DNS (Cloudflare)
+1.  Point your domain (e.g., `app.yourdomain.com`) to the server's public IP using an **A Record**.
+2.  Enable **Proxy Status** (Orange Cloud) for SSL/TLS offloading if desired.
 
-## 3. Google Cloud Console
+### Nginx Configuration
+The repository comes with a generic `nginx.conf`. You **must** customize this for each server instance.
 
-To allow Google Login from your domain:
+1.  Open `nginx.conf`.
+2.  Update the `server_name` directive to match your domain:
+    ```nginx
+    server {
+        listen 80;
+        server_name app.yourdomain.com; # <--- Update this
+        ...
+    }
+    ```
+3.  **Important**: If you have a `nginx.conf.private` from a previous backup, you can simply overwrite `nginx.conf` with it (ensure you don't commit the private file back to git).
 
-1.  Go to [Google Cloud Console](https://console.cloud.google.com/).
-2.  Select your project.
-3.  Go to **APIs & Services > Credentials**.
-4.  Edit your **OAuth 2.0 Client ID**.
-5.  **Authorized JavaScript origins**:
-    *   Add: `https://turtle.infran.dev.br`
-    *   Add: `http://localhost:5173` (for local dev).
-6.  **Authorized redirect URIs** (if used):
-    *   Add: `https://turtle.infran.dev.br`
+## 4. Google Authentication
 
-## 4. Application Configuration
+Each deployment domain needs to be authorized in the Google Cloud Console.
 
-### Nginx (`nginx.conf`)
-Ensure `server_name` includes your domain:
-```nginx
-server {
-    listen 80;
-    server_name turtle.infran.dev.br localhost;
-    ...
-}
+1.  Go to [Google Cloud Console](https://console.cloud.google.com/) > **APIs & Services** > **Credentials**.
+2.  Edit your **OAuth 2.0 Client ID**.
+3.  Add the new domain to **Authorized JavaScript origins** (e.g., `https://app.yourdomain.com`).
+4.  Add the new domain to **Authorized redirect URIs** (e.g., `https://app.yourdomain.com`).
+
+## 5. Build and Deploy
+
+### Using PowerShell (Windows)
+Run the included publish script:
+```powershell
+./publish.ps1
 ```
 
-### Environment Variables (`.env`)
-Ensure your `VITE_GOOGLE_CLIENT_ID` matches the one in Google Cloud Console.
+### Manual Deployment (Linux/Mac/Generic)
+If you are not using PowerShell, run the following Docker commands:
+
+1.  **Build the Image**:
+    ```bash
+    # Load env vars (simplified approach, or just paste them)
+    export VITE_GOOGLE_CLIENT_ID=your_id
+    export VITE_GOOGLE_API_KEY=your_key
+
+    docker build -t turtle-app \
+      --build-arg VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID \
+      --build-arg VITE_GOOGLE_API_KEY=$VITE_GOOGLE_API_KEY \
+      .
+    ```
+
+2.  **Run the Container**:
+    ```bash
+    docker stop turtle-container || true
+    docker rm turtle-container || true
+    docker run -d -p 80:80 --name turtle-container turtle-app
+    ```
 
 ## Troubleshooting
 
-*   **"Origin Mismatch" Error**: Check "Authorized JavaScript origins" in Google Console. It must exactly match the URL in your browser (https vs http).
-*   **Site not loading**: Check Port Forwarding on your router and ensure Docker/Nginx is running.
-*   **Cloudflare 522 Error**: Connection timed out. Your router is not forwarding port 80 correctly, or your ISP blocks port 80.
+-   **Login Fails**: Check Google Cloud Console "Authorized origins".
+-   **502 Bad Gateway**: Check if the Docker container is running (`docker ps`).
+-   **Domain not resolving**: Check Cloudflare DNS settings.

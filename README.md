@@ -85,3 +85,7 @@ export default defineConfig([
   },
 ])
 ```
+
+## Configuration
+
+The `nginx.conf` file in this repository is a default configuration. For local development with specific domains, create a `nginx.conf.private` file (which is ignored by git) or modify `nginx.conf` locally without committing.
